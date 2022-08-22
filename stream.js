@@ -9,8 +9,7 @@ const streamURL = "https://api.twitter.com/2/tweets/search/stream";
 
 const rules = [
   {
-    value: "dog has:images -is:retweet",
-    tag: "dog pictures",
+    value: "from: 6ifka_eth",
   },
 ];
 
