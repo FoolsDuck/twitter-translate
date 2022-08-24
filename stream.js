@@ -1,6 +1,6 @@
 const dotenv = require("dotenv").config();
 const needle = require("needle");
-const { reply } = require("./actions");
+const { reply, getTweetById } = require("./actions");
 const { translateTweet } = require("./translate");
 const token = process.env.BEARER;
 
@@ -9,7 +9,7 @@ const streamURL = "https://api.twitter.com/2/tweets/search/stream";
 
 const rules = [
   {
-    value: "@6ifka_eng",
+    value: "-from:6ifka_eng -to:6ifka_eng @6ifka_eng",
   },
 ];
 
@@ -89,8 +89,12 @@ function streamConnect(retryAttempt) {
         const json = JSON.parse(data);
         // Translate the tweet and reply back:
         console.log(json);
-        const translatedTxt = await translateTweet(json.data.text, "en");
-        reply(json.data.id, translatedTxt);
+        const thread = await getTweetById(json.data.id);
+        const mainThread = await getTweetById(thread.in_reply_to_status_id_str);
+        const translatedTxt = await translateTweet(mainThread.full_text, "en");
+        if (!mainThread.full_text.includes("@6ifka_eng")) {
+          reply(json.data.id, translatedTxt);
+        }
         // A successful connection resets retry count.
         retryAttempt = 0;
       } catch (e) {
