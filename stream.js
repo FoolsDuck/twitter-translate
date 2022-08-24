@@ -9,7 +9,7 @@ const streamURL = "https://api.twitter.com/2/tweets/search/stream";
 
 const rules = [
   {
-    value: "from: 6ifka_eth",
+    value: "@6ifka_eng",
   },
 ];
 
@@ -124,8 +124,9 @@ function streamConnect(retryAttempt) {
   let currentRules;
 
   try {
+    // await setRules();
     currentRules = await getAllRules();
-    // add or delete rules....
+    console.log(currentRules);
   } catch (e) {
     console.error(e);
     process.exit(1);
